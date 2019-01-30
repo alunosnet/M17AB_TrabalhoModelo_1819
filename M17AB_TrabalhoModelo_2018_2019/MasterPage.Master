@@ -1,0 +1,87 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MasterPage.master.cs" Inherits="M17AB_TrabalhoModelo_2018_2019.MasterPage" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/css.css" rel="stylesheet" />
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+         <!--Menu-->
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" href="index.aspx">PSI</a>
+            <!--menu hamburguer-->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!--menu hamburguer-->
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+                    <% if (Session["perfil"] != null && Session["perfil"].Equals("0"))
+                        { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="areaadmin.aspx">Área Admin</a>
+                    </li>
+                    <% } %>
+                    <% if (Session["perfil"] != null && Session["perfil"].Equals("1"))
+    { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="areacliente.aspx">Área Cliente</a>
+                    </li>
+                    <% } %>
+                    <% if (Request.Url.LocalPath.ToLower().EndsWith("index.aspx")){ %>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ordenação</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a class="dropdown-item" href="Tabela_N_Norm.aspx">Por Preço</a>
+                            <a class="dropdown-item" href="Tabela_Norm.aspx">Por Autor</a>
+                        </div>
+                    </li>
+                    <%} %>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <% if (Session["perfil"] == null)
+                        { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="registo.aspx">Registar</a>
+                    </li>
+                    <% }
+                        else
+                        { %>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><% Response.Write(Session["nome"]); %></a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown02">
+                            <a class="dropdown-item" href="logout.aspx">Terminar Sessão</a>
+                        </div>
+                    </li>
+                    <% } %>
+                </ul>
+            </div>
+        </nav>
+        <!--Menu-->
+        <div class="container">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+        <!--Aviso-->
+        <div runat="server" id="div_aviso">
+            <footer class="footer">
+                <div class="container">
+                    Este site utiliza cookies.
+                    <asp:Button runat="server" ID="bt1" 
+                        CssClass="btn btn-outline-primary float-right"
+                        Text="Aceitar" OnClick="bt1_Click" />
+                </div>
+            </footer>
+        </div>
+    </form>
+    <script src="js/jquery-3.3.1.slim.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+</body>
+</html>
