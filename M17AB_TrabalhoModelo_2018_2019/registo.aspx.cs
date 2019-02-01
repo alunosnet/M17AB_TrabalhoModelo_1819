@@ -38,12 +38,24 @@ namespace M17AB_TrabalhoModelo_2018_2019
                 string password = tbPassword.Text;
                 if (password.Trim().Length < 5)
                     throw new Exception("A password tem de ter 5 letras");
-                
-                //validar o recaptcha
 
+                //validar o recaptcha
+                var respostaRecaptcha = Request.Form["g-Recaptcha-Response"];
+                var eValido = ReCaptcha.Validate(respostaRecaptcha);
+                if (!eValido)
+                    throw new Exception("Tem de provar que não é um robot...");
                 //adicionar à bd
+                Utilizador.registar(email, nome, morada, nif, password);
 
                 //mensagem ao utilizador
+                lbErro.Text = "Registo efetuado com sucesso.";
+                lbErro.CssClass = "info";
+                string redirecionaComTempo = @"<script>
+                    window.setTimeout(function(){
+                        window.location.href='index.aspx';
+                        },3000);
+                </script>";
+                Response.Write(redirecionaComTempo);
             }
             catch (Exception erro)
             {

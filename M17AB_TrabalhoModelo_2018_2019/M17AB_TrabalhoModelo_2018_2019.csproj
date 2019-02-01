@@ -71,6 +71,8 @@
     <Content Include="App_Data\m17ab_bd_log.ldf">
       <DependentUpon>m17ab_bd.mdf</DependentUpon>
     </Content>
+    <Content Include="areaadmin.aspx" />
+    <Content Include="areacliente.aspx" />
     <Content Include="css\bootstrap-grid.css" />
     <Content Include="css\bootstrap-grid.min.css" />
     <Content Include="css\bootstrap-reboot.css" />
@@ -86,16 +88,40 @@
     <Content Include="js\jquery-3.3.1.slim.min.js" />
     <Content Include="js\popper.min.js" />
     <Content Include="logbook.txt" />
+    <Content Include="logout.aspx" />
     <Content Include="registo.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="areaadmin.aspx.cs">
+      <DependentUpon>areaadmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="areaadmin.aspx.designer.cs">
+      <DependentUpon>areaadmin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="areacliente.aspx.cs">
+      <DependentUpon>areacliente.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="areacliente.aspx.designer.cs">
+      <DependentUpon>areacliente.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BaseDados.cs" />
     <Compile Include="index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Login.cs" />
+    <Compile Include="logout.aspx.cs">
+      <DependentUpon>logout.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="logout.aspx.designer.cs">
+      <DependentUpon>logout.aspx</DependentUpon>
     </Compile>
     <Compile Include="MasterPage.Master.cs">
       <DependentUpon>MasterPage.Master</DependentUpon>
@@ -113,6 +139,7 @@
     <Compile Include="registo.aspx.designer.cs">
       <DependentUpon>registo.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Utilizador.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\bootstrap-grid.css.map" />
