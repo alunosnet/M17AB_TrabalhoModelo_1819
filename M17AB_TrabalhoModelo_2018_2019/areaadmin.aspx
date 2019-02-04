@@ -58,8 +58,7 @@
             <label for="fuCapa">Capa:</label>
             <asp:FileUpload runat="server" ID="fuCapa" CssClass="form-control btn btn-default" />
         </div>
-        <!--erros-->
-        <asp:Label runat="server" ID="lbErro"></asp:Label>
+        
         <asp:Button runat="server" ID="btAdicionarLivro" Text="Adicionar"
             CssClass="btn btn-info" OnClick="btAdicionarLivro_Click" />
     </div>
@@ -102,7 +101,6 @@
                 <asp:ListItem Value="1" Selected="True">Leitor</asp:ListItem>
             </asp:DropDownList>
         </div>
-        <asp:Label runat="server" ID="lbUErro" />
         <asp:Button CssClass="btn btn-danger" runat="server" ID="btUAdicionarUtilizador" Text="Adicionar" OnClick="btUAdicionarUtilizador_Click" />
     </div>
     <!--utilizadores-->
@@ -124,7 +122,6 @@
             <label for="DataDevolve">Data de Devolução:</label>
             <asp:Calendar runat="server" ID="DataDevolve"></asp:Calendar>
         </div>
-        <asp:Label runat="server" ID="lbEErro" />
         <asp:Button runat="server" ID="btEAdicionar" Text="Adicionar" CssClass="btn btn-danger" OnClick="btEAdicionar_Click" />
     </div>
     <!--Empréstimos-->
@@ -144,5 +141,6 @@
         <asp:GridView runat="server" ID="gvConsultas" CssClass="table table-responsive"></asp:GridView>
     </div>
     <!--Consultas-->
-
+    <!--erros-->
+    <asp:Label runat="server" ID="lbErro"></asp:Label>
 </asp:Content>

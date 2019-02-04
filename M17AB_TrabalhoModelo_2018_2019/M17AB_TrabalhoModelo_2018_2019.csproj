@@ -80,6 +80,7 @@
     <Content Include="css\bootstrap.css" />
     <Content Include="css\bootstrap.min.css" />
     <Content Include="css\css.css" />
+    <Content Include="editarlivro.aspx" />
     <Content Include="index.aspx" />
     <Content Include="js\bootstrap.bundle.js" />
     <Content Include="js\bootstrap.bundle.min.js" />
@@ -90,6 +91,7 @@
     <Content Include="logbook.txt" />
     <Content Include="logout.aspx" />
     <Content Include="registo.aspx" />
+    <Content Include="removerlivro.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +110,13 @@
       <DependentUpon>areacliente.aspx</DependentUpon>
     </Compile>
     <Compile Include="BaseDados.cs" />
+    <Compile Include="editarlivro.aspx.cs">
+      <DependentUpon>editarlivro.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="editarlivro.aspx.designer.cs">
+      <DependentUpon>editarlivro.aspx</DependentUpon>
+    </Compile>
     <Compile Include="index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -115,6 +124,7 @@
     <Compile Include="index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Livro.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="logout.aspx.cs">
       <DependentUpon>logout.aspx</DependentUpon>
@@ -138,6 +148,13 @@
     </Compile>
     <Compile Include="registo.aspx.designer.cs">
       <DependentUpon>registo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="removerlivro.aspx.cs">
+      <DependentUpon>removerlivro.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="removerlivro.aspx.designer.cs">
+      <DependentUpon>removerlivro.aspx</DependentUpon>
     </Compile>
     <Compile Include="Utilizador.cs" />
   </ItemGroup>
