@@ -73,6 +73,7 @@
     </Content>
     <Content Include="areaadmin.aspx" />
     <Content Include="areacliente.aspx" />
+    <Content Include="bloquearutilizador.aspx" />
     <Content Include="css\bootstrap-grid.css" />
     <Content Include="css\bootstrap-grid.min.css" />
     <Content Include="css\bootstrap-reboot.css" />
@@ -81,17 +82,20 @@
     <Content Include="css\bootstrap.min.css" />
     <Content Include="css\css.css" />
     <Content Include="editarlivro.aspx" />
+    <Content Include="editarutilizador.aspx" />
     <Content Include="index.aspx" />
     <Content Include="js\bootstrap.bundle.js" />
     <Content Include="js\bootstrap.bundle.min.js" />
     <Content Include="js\bootstrap.js" />
     <Content Include="js\bootstrap.min.js" />
+    <Content Include="js\codigo.js" />
     <Content Include="js\jquery-3.3.1.slim.min.js" />
     <Content Include="js\popper.min.js" />
     <Content Include="logbook.txt" />
     <Content Include="logout.aspx" />
     <Content Include="registo.aspx" />
     <Content Include="removerlivro.aspx" />
+    <Content Include="removerutilizador.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -110,12 +114,26 @@
       <DependentUpon>areacliente.aspx</DependentUpon>
     </Compile>
     <Compile Include="BaseDados.cs" />
+    <Compile Include="bloquearutilizador.aspx.cs">
+      <DependentUpon>bloquearutilizador.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="bloquearutilizador.aspx.designer.cs">
+      <DependentUpon>bloquearutilizador.aspx</DependentUpon>
+    </Compile>
     <Compile Include="editarlivro.aspx.cs">
       <DependentUpon>editarlivro.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="editarlivro.aspx.designer.cs">
       <DependentUpon>editarlivro.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="editarutilizador.aspx.cs">
+      <DependentUpon>editarutilizador.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="editarutilizador.aspx.designer.cs">
+      <DependentUpon>editarutilizador.aspx</DependentUpon>
     </Compile>
     <Compile Include="index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
@@ -155,6 +173,13 @@
     </Compile>
     <Compile Include="removerlivro.aspx.designer.cs">
       <DependentUpon>removerlivro.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="removerutilizador.aspx.cs">
+      <DependentUpon>removerutilizador.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="removerutilizador.aspx.designer.cs">
+      <DependentUpon>removerutilizador.aspx</DependentUpon>
     </Compile>
     <Compile Include="Utilizador.cs" />
   </ItemGroup>

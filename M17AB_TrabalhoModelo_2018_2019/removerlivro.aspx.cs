@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -14,6 +15,8 @@ namespace M17AB_TrabalhoModelo_2018_2019
         {
             //TODO:verificar se é admin
 
+            //testar postback
+            if (IsPostBack) return;
             //carregar os dados do livro a remover
             try
             {
@@ -40,12 +43,25 @@ namespace M17AB_TrabalhoModelo_2018_2019
 
         protected void btRemover_Click(object sender, EventArgs e)
         {
-            //remover livro
-            //remover a capa
-            //mostrar mensagem de sucesso
-
-            //voltar à areaadmin.aspx
-
+            try
+            {
+                int nlivro = int.Parse(Request["id"].ToString());
+                //remover livro
+                Livro.removerLivro(nlivro);
+                //remover a capa
+                string ficheiro = Server.MapPath(@"~\Images\" + nlivro + ".jpg");
+                File.Delete(ficheiro);
+                //mostrar mensagem de sucesso
+                lbErro.Text = "Livro removido com sucesso.";
+                //voltar à areaadmin.aspx
+                ScriptManager.RegisterStartupScript(this,
+                    typeof(Page), "Voltar", "returnMain();", true);
+            }
+            catch(Exception erro)
+            {
+                lbErro.Text = "Ocorreu o seguinte erro: " + erro.Message;
+                lbErro.CssClass = "bg-danger";
+            }
         }
     }
 }

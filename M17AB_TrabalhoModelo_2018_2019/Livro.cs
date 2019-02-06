@@ -40,5 +40,33 @@ namespace M17AB_TrabalhoModelo_2018_2019
             };
             return BaseDados.Instance.devolveSQL(sql, parametros);
         }
+        public static void removerLivro(int nlivro)
+        {
+            string sql = "DELETE FROM Livros WHERE nlivro=@nlivro";
+            List<SqlParameter> parametros = new List<SqlParameter>()
+            {
+                new SqlParameter() {ParameterName="@nlivro",SqlDbType=SqlDbType.Int,Value=nlivro }
+            };
+            BaseDados.Instance.executaSQL(sql, parametros);
+        }
+        public static void atualizaLivro(int nlivro, string nome, int ano, DateTime data, decimal preco, string autor, string tipo)
+        {
+            string sql = "UPDATE Livros SET nome=@nome,ano=@ano,data_aquisicao=@data,preco=@preco,";
+            sql += "autor=@autor, tipo=@tipo ";
+            sql += " WHERE nlivro=@nlivro;";
+            List<SqlParameter> parametros = new List<SqlParameter>()
+            {
+                new SqlParameter() {ParameterName="@nome",SqlDbType=SqlDbType.VarChar,Value= nome},
+                new SqlParameter() {ParameterName="@ano",SqlDbType=SqlDbType.Int,Value= ano},
+                new SqlParameter() {ParameterName="@data",SqlDbType=SqlDbType.DateTime,Value= data},
+                new SqlParameter() {ParameterName="@preco",SqlDbType=SqlDbType.Decimal,Value= preco},
+                new SqlParameter() {ParameterName="@autor",SqlDbType=SqlDbType.VarChar,Value=autor},
+                new SqlParameter() {ParameterName="@tipo",SqlDbType=SqlDbType.VarChar,Value=tipo},
+                new SqlParameter() {ParameterName="@nlivro",SqlDbType=SqlDbType.Int,Value=nlivro}
+            };
+            BaseDados.Instance.executaSQL(sql, parametros);
+        }
+
     }
+
 }

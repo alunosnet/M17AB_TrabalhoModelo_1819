@@ -32,7 +32,27 @@ namespace M17AB_TrabalhoModelo_2018_2019
         }
         void ConfigurarGrids()
         {
-            //TODO:
+            //paginação da grelha livros
+            gvLivros.AllowPaging = true;
+            gvLivros.PageSize = 5;
+            gvLivros.PageIndexChanging += GvLivros_PageIndexChanging;
+
+            //paginação da grelha utilizadores
+            gvUtilizadores.AllowPaging = true;
+            gvUtilizadores.PageSize = 5;
+            gvUtilizadores.PageIndexChanging += GvUtilizadores_PageIndexChanging;
+        }
+
+        private void GvUtilizadores_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvUtilizadores.PageIndex = e.NewPageIndex;
+            atualizaGrelhaUtilizadores();
+        }
+
+        private void GvLivros_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvLivros.PageIndex = e.NewPageIndex;
+            atualizaGrelhaLivros();
         }
         #region livros
         protected void btLivros_Click(object sender, EventArgs e)
@@ -229,10 +249,184 @@ namespace M17AB_TrabalhoModelo_2018_2019
         #region utilizadores
         protected void btUtilizadores_Click(object sender, EventArgs e)
         {
+            EscondeDivs();
 
+            //mostrar div utilizadores
+            divUtilizadores.Visible = true;
+
+            //css botões
+            btUtilizadores.CssClass = "btn btn-info active";
+
+            //cache
+            Response.CacheControl = "no-cache";
+
+            atualizaGrelhaUtilizadores();
         }
         protected void btUAdicionarUtilizador_Click(object sender, EventArgs e)
         {
+            try
+            {
+                string email = tbUEmail.Text;
+                if (email == String.Empty || email.Contains("@") == false)
+                    throw new Exception("O email indicado não é válido.");
+
+                string nome = tbUNome.Text;
+                if (nome == String.Empty || nome.Trim().Length < 2)
+                    throw new Exception("O nome indicado não é válido.");
+
+                string morada = tbUMorada.Text;
+                if (morada == String.Empty || morada.Trim().Length < 2)
+                    throw new Exception("A morada indicada não é válida.");
+
+                string nif = tbUNif.Text;
+                int z = int.Parse(nif);
+                if (nif.Length != 9)
+                    throw new Exception("O nif tem de ter 9 algarismos.");
+
+                string password = tbUPassword.Text;
+                if (password.Trim().Length < 5)
+                    throw new Exception("A password tem de ter 5 letras");
+                //validar perfil
+                int perfil = int.Parse(ddPerfil.SelectedValue);
+                if (perfil < 0 || perfil > 1)
+                    throw new Exception("Perfil inválido");
+                //adicionar à bd
+                Utilizador.registar(email, nome, morada, nif, password,perfil);
+
+                //mensagem ao utilizador
+                lbErro.Text = "Utilizador adicionado com sucesso.";
+                lbErro.CssClass = "info";
+
+                //limpar form
+                tbUEmail.Text = "";
+                tbUMorada.Text = "";
+                tbUNif.Text = "";
+                tbUNome.Text = "";
+                tbUPassword.Text = "";
+                ddPerfil.SelectedIndex = 0;
+
+                //atualiza grelha
+                atualizaGrelhaUtilizadores();
+                
+            }
+            catch (Exception erro)
+            {
+                lbErro.Text = erro.Message;
+                lbErro.CssClass = "alert";
+            }
+        }
+        private void atualizaGrelhaUtilizadores()
+        {
+            // limpar gridview
+            gvUtilizadores.Columns.Clear();
+            gvUtilizadores.DataSource = null;
+            gvUtilizadores.DataBind();
+
+            DataTable dados = Utilizador.listaTodosUtilizadores();
+
+            if (dados == null || dados.Rows.Count == 0) return;
+
+            //configurar as colunas da gridview e datatable
+            DataColumn dcRemover = new DataColumn();
+            dcRemover.ColumnName = "Remover";
+            dcRemover.DataType = Type.GetType("System.String");
+            dados.Columns.Add(dcRemover);
+
+            DataColumn dcEditar = new DataColumn();
+            dcEditar.ColumnName = "Editar";
+            dcEditar.DataType = Type.GetType("System.String");
+            dados.Columns.Add(dcEditar);
+
+            DataColumn dcBloquear = new DataColumn();
+            dcBloquear.ColumnName = "Bloquear";
+            dcBloquear.DataType = Type.GetType("System.String");
+            dados.Columns.Add(dcBloquear);
+
+            DataColumn dcHistorico = new DataColumn();
+            dcHistorico.ColumnName = "Historico";
+            dcHistorico.DataType = Type.GetType("System.String");
+            dados.Columns.Add(dcHistorico);
+
+            //associar o datatable à grid
+            gvUtilizadores.DataSource = dados;
+            //desativar a geração automatica das colunas
+            gvUtilizadores.AutoGenerateColumns = false;
+
+            //gridview
+            HyperLinkField hlRemover = new HyperLinkField();
+            hlRemover.HeaderText = "Remover"; //título da coluna
+            hlRemover.DataTextField = "Remover";    //campo associado
+            hlRemover.Text = "Remover Utilizador";   //texto clicavel
+            //criar um link removerlivro.aspx?nlivro=1
+            hlRemover.DataNavigateUrlFormatString = "removerutilizador.aspx?id={0}";
+            hlRemover.DataNavigateUrlFields = new string[] { "id" };
+            gvUtilizadores.Columns.Add(hlRemover);
+            //coluna editar
+            HyperLinkField hlEditar = new HyperLinkField();
+            hlEditar.HeaderText = "Editar"; //título da coluna
+            hlEditar.DataTextField = "Editar";    //campo associado
+            hlEditar.Text = "Editar Utilizador";   //texto clicavel
+            //criar um link editarlivro.aspx?nlivro=1
+            hlEditar.DataNavigateUrlFormatString = "editarutilizador.aspx?id={0}";
+            hlEditar.DataNavigateUrlFields = new string[] { "id" };
+            gvUtilizadores.Columns.Add(hlEditar);
+
+            //coluna para bloquear/desbloquear
+            HyperLinkField hlBloquear = new HyperLinkField();
+            hlBloquear.HeaderText = "Bloquear/Desbloquear"; //título da coluna
+            hlBloquear.DataTextField = "Bloquear";    //campo associado
+            hlBloquear.Text = "Bloquear/Desbloquear";   //texto clicavel
+            hlBloquear.DataNavigateUrlFormatString = "bloquearutilizador.aspx?id={0}";
+            hlBloquear.DataNavigateUrlFields = new string[] { "id" };
+            gvUtilizadores.Columns.Add(hlBloquear);
+            //histórico
+            HyperLinkField hlHistorico = new HyperLinkField();
+            hlHistorico.HeaderText = "Histórico"; //título da coluna
+            hlHistorico.DataTextField = "Historico";    //campo associado
+            hlHistorico.Text = "Ver histórico";   //texto clicavel
+            hlHistorico.DataNavigateUrlFormatString = "historico.aspx?id={0}";
+            hlHistorico.DataNavigateUrlFields = new string[] { "id" };
+            gvUtilizadores.Columns.Add(hlHistorico);
+
+            //restantes colunas
+            //id
+            BoundField bfId = new BoundField();
+            bfId.HeaderText = "Id";
+            bfId.DataField = "id";
+            gvUtilizadores.Columns.Add(bfId);
+            //email
+            BoundField bfEmail = new BoundField();
+            bfEmail.HeaderText = "Email";
+            bfEmail.DataField = "email";
+            gvUtilizadores.Columns.Add(bfEmail);
+            //nome
+            BoundField bfNome = new BoundField();
+            bfNome.HeaderText = "Nome";
+            bfNome.DataField = "nome";
+            gvUtilizadores.Columns.Add(bfNome);
+            //morada
+            BoundField bfMorada = new BoundField();
+            bfMorada.HeaderText = "Morada";
+            bfMorada.DataField = "morada";
+            gvUtilizadores.Columns.Add(bfMorada);
+            //nif
+            BoundField bfNif = new BoundField();
+            bfNif.HeaderText = "Nif";
+            bfNif.DataField = "nif";
+            gvUtilizadores.Columns.Add(bfNif);
+            //estado
+            BoundField bfEstado = new BoundField();
+            bfEstado.HeaderText = "Estado";
+            bfEstado.DataField = "estado";
+            gvUtilizadores.Columns.Add(bfEstado);
+            //perfil
+            BoundField bfPerfil = new BoundField();
+            bfPerfil.HeaderText = "Perfil";
+            bfPerfil.DataField = "perfil";
+            gvUtilizadores.Columns.Add(bfPerfil);
+
+            //associar o datatable à gridview
+            gvUtilizadores.DataBind();
 
         }
         #endregion
