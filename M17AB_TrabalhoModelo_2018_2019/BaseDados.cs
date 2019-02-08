@@ -46,6 +46,10 @@ namespace M17AB_TrabalhoModelo_2018_2019
         {
             return ligacaoBD.BeginTransaction();
         }
+        public SqlTransaction iniciarTransacao(IsolationLevel isolamento)
+        {
+            return ligacaoBD.BeginTransaction(isolamento);
+        }
         public void executaSQL(string sql)
         {
             SqlCommand comando = new SqlCommand(sql, ligacaoBD);
@@ -127,7 +131,20 @@ namespace M17AB_TrabalhoModelo_2018_2019
             comando = null;
             return registos;
         }
-#endregion
+        public DataTable devolveSQL(string sql, List<SqlParameter> parametros,SqlTransaction transacao)
+        {
+            SqlCommand comando = new SqlCommand(sql, ligacaoBD);
+            comando.Transaction = transacao;
+            DataTable registos = new DataTable();
+            comando.Parameters.AddRange(parametros.ToArray());
+            SqlDataReader dados = comando.ExecuteReader();
+            registos.Load(dados);
+            dados = null;
+            comando.Dispose();
+            comando = null;
+            return registos;
+        }
+        #endregion
 
 
     }

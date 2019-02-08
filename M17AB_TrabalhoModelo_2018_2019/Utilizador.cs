@@ -100,7 +100,12 @@ namespace M17AB_TrabalhoModelo_2018_2019
             string sql = "SELECT id, email,nome, morada, nif,  estado, perfil FROM utilizadores";
             return BaseDados.Instance.devolveSQL(sql);
         }
-
+        public static DataTable listaTodosUtilizadoresDisponiveis()
+        {
+            string sql = $@"SELECT id, email,nome, morada, nif,  estado, perfil 
+            FROM utilizadores where estado=1";
+            return BaseDados.Instance.devolveSQL(sql);
+        }
         public static void atualizarUtilizador(int id,string email,string nome,string morada,string nif)
         {
             string sql = @"UPDATE utilizadores SET email=@email,nome=@nome,morada=@morada,nif=@nif 

@@ -11,7 +11,17 @@ namespace M17AB_TrabalhoModelo_2018_2019
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            //TODO: verificar se é admin
+            try
+            {
+                int id = int.Parse(Request["id"].ToString());
+                Utilizador.ativarDesativarUtilizador(id);
+            }
+            catch
+            {
 
+            }
+            Response.Redirect("areaadmin.aspx");
         }
     }
 }

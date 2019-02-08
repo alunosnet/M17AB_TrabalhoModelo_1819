@@ -12,9 +12,12 @@ namespace M17AB_TrabalhoModelo_2018_2019
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //TODO: validar a sessão do utilizador
+            //Validar a sessão do utilizador
+            if (Session["perfil"] == null ||
+                Session["perfil"].ToString() != "0")
+                Response.Redirect("index.aspx");
 
-            if(!IsPostBack)
+                if (!IsPostBack)
                 EscondeDivs();
 
             ConfigurarGrids();
@@ -41,6 +44,30 @@ namespace M17AB_TrabalhoModelo_2018_2019
             gvUtilizadores.AllowPaging = true;
             gvUtilizadores.PageSize = 5;
             gvUtilizadores.PageIndexChanging += GvUtilizadores_PageIndexChanging;
+
+            //botões de comando
+            gvEmprestimos.RowCommand += GvEmprestimos_RowCommand;
+        }
+
+        private void GvEmprestimos_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            //linha
+            int linha = int.Parse(e.CommandArgument as string);
+
+            //id emprestimo
+            int idemprestimo = int.Parse(gvEmprestimos.Rows[linha].Cells[2].Text);
+
+            //comando
+            if(e.CommandName== "alterar")
+            {
+                Emprestimo.alterarEstadoEmprestimo(idemprestimo);
+                atualizaGrelhaEmprestimos();
+                //TODO: atualizar dropdown
+            }
+            if (e.CommandName == "email")
+            {
+
+            }
         }
 
         private void GvUtilizadores_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -431,13 +458,81 @@ namespace M17AB_TrabalhoModelo_2018_2019
         }
         #endregion
         #region emprestimos
+
+        private void atualizaDDLivros()
+        {
+            ddLivro.Items.Clear();
+            DataTable dados = Livro.listaLivrosDisponiveis();
+            foreach (DataRow livro in dados.Rows)
+            {
+                ddLivro.Items.Add(
+                    new ListItem(livro[1].ToString(),
+                    livro[0].ToString()
+                    ));
+            }
+        }
+        private void atualizaDDLeitores()
+        {
+            ddUtilizador.Items.Clear();
+            DataTable dados=Utilizador.listaTodosUtilizadores
+        }
         protected void btEmprestimos_Click(object sender, EventArgs e)
         {
+            EscondeDivs();
+
+            //mostrar div emprestimos
+            divEmprestimos.Visible = true;
+
+            //css botões
+            btEmprestimos.CssClass = "btn btn-info active";
+
+            //cache
+            Response.CacheControl = "no-cache";
+
+            atualizaGrelhaEmprestimos();
+            //TODO: atualizar dropdowns
+        }
+
+        private void atualizaGrelhaEmprestimos()
+        {
+            gvEmprestimos.Columns.Clear();
+            gvEmprestimos.DataSource = null;
+            gvEmprestimos.DataBind();
+
+            DataTable dados;
+
+            if (cbEmprestimos.Checked)
+                dados = Emprestimo.listaTodosEmprestimosPorConcluirComNomes();     //emprestimos por concluir
+            else
+                dados = Emprestimo.listaTodosEmprestimosComNomes();      //todos emprestimos
+
+            if (dados == null || dados.Rows.Count == 0) return;
+
+            //alterar estado livro
+            ButtonField btEstado = new ButtonField();
+            btEstado.HeaderText = "Definir Estado";
+            btEstado.Text = "Alterar";
+            btEstado.ButtonType = ButtonType.Button;
+            btEstado.CommandName = "alterar";
+            gvEmprestimos.Columns.Add(btEstado);
+
+            //enviar email
+            ButtonField btEmail = new ButtonField();
+            btEmail.HeaderText = "Email";
+            btEmail.Text = "Email";
+            btEmail.ButtonType = ButtonType.Button;
+            btEmail.CommandName = "email";
+            gvEmprestimos.Columns.Add(btEmail);
+
+            gvEmprestimos.DataSource = dados;
+            gvEmprestimos.AutoGenerateColumns = true;
+            gvEmprestimos.DataBind();
 
         }
+
         protected void cbEmprestimos_CheckedChanged(object sender, EventArgs e)
         {
-
+            atualizaGrelhaEmprestimos();
         }
 
         protected void btEAdicionar_Click(object sender, EventArgs e)

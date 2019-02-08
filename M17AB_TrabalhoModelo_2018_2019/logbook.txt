@@ -34,7 +34,7 @@ create table emprestimos(
 	idutilizador int references utilizadores(id),
 	data_emprestimo date,
 	data_devolve date,
-	estado int --1-Reservado 2-Emprestado 0-Terminado
+	estado int --2-Reservado 1-Emprestado 0-Terminado
 )
 
 create index ilivro_nome on livros(nome)

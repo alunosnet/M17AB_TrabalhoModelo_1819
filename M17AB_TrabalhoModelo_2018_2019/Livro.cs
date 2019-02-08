@@ -66,7 +66,11 @@ namespace M17AB_TrabalhoModelo_2018_2019
             };
             BaseDados.Instance.executaSQL(sql, parametros);
         }
-
+        public static DataTable listaLivrosDisponiveis()
+        {
+            string sql = "SELECT * FROM Livros WHERE estado=1";
+            return BaseDados.Instance.devolveSQL(sql);
+        }
     }
 
 }
