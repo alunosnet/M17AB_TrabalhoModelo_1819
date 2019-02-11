@@ -26,9 +26,51 @@ namespace M17AB_TrabalhoModelo_2018_2019
             return BaseDados.Instance.executaEDevolveSQL(sql, parametros);
         }
 
+        internal static DataTable listaLivrosDoAutor(string pesquisa)
+        {
+            string sql = "SELECT * FROM Livros WHERE estado=1 and autor like @nome";
+
+            List<SqlParameter> parametros = new List<SqlParameter>()
+            {
+                new SqlParameter() {
+                    ParameterName ="@nome",
+                    SqlDbType =SqlDbType.VarChar,
+                    Value = "%"+pesquisa+"%"},
+            };
+            return BaseDados.Instance.devolveSQL(sql, parametros);
+        }
+
+        internal static DataTable listaLivrosDisponiveis(string pesquisa,int? ordena=null)
+        {
+            string sql = "SELECT * FROM Livros WHERE estado=1 and nome like @nome";
+            if(ordena!=null && ordena == 1)
+            {
+                sql += " order by preco";
+            }
+            if (ordena != null && ordena == 2)
+            {
+                sql += " order by autor";
+            }
+
+            List<SqlParameter> parametros = new List<SqlParameter>()
+            {
+                new SqlParameter() {
+                    ParameterName ="@nome",
+                    SqlDbType =SqlDbType.VarChar,
+                    Value = "%"+pesquisa+"%"},
+            };
+            return BaseDados.Instance.devolveSQL(sql,parametros);
+        }
+
         public static DataTable listaLivros()
         {
-            string sql = "SELECT * FROM Livros";
+            string sql = $@"SELECT nlivro,nome,ano,data_aquisicao,preco,autor,tipo,
+                        case 
+                            when estado=0 then 'Emprestado'
+                            when estado=1 then 'Disponível'
+                            when estado=2 then 'Reservado'
+                        end as estado
+                            FROM Livros";
             return BaseDados.Instance.devolveSQL(sql);
         }
         public static DataTable devolveDadosLivro(int nlivro)
@@ -66,9 +108,17 @@ namespace M17AB_TrabalhoModelo_2018_2019
             };
             BaseDados.Instance.executaSQL(sql, parametros);
         }
-        public static DataTable listaLivrosDisponiveis()
+        public static DataTable listaLivrosDisponiveis(int? ordena=null)
         {
             string sql = "SELECT * FROM Livros WHERE estado=1";
+            if (ordena != null && ordena == 1)
+            {
+                sql += " order by preco";
+            }
+            if (ordena != null && ordena == 2)
+            {
+                sql += " order by autor";
+            }
             return BaseDados.Instance.devolveSQL(sql);
         }
     }

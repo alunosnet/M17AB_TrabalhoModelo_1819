@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace M17AB_TrabalhoModelo_2018_2019
@@ -17,7 +14,7 @@ namespace M17AB_TrabalhoModelo_2018_2019
                 Session["perfil"].ToString() != "0")
                 Response.Redirect("index.aspx");
 
-                if (!IsPostBack)
+            if (!IsPostBack)
                 EscondeDivs();
 
             ConfigurarGrids();
@@ -58,15 +55,23 @@ namespace M17AB_TrabalhoModelo_2018_2019
             int idemprestimo = int.Parse(gvEmprestimos.Rows[linha].Cells[2].Text);
 
             //comando
-            if(e.CommandName== "alterar")
+            if (e.CommandName == "alterar")
             {
                 Emprestimo.alterarEstadoEmprestimo(idemprestimo);
                 atualizaGrelhaEmprestimos();
-                //TODO: atualizar dropdown
+                atualizaDDLivros();
             }
             if (e.CommandName == "email")
             {
+                DataTable dadosEmprestimo = Emprestimo.devolveDadosEmprestimo(idemprestimo);
+                int idUtilizador = int.Parse(dadosEmprestimo.Rows[0]["idutilizador"].ToString());
+                DataTable dadosUtilizador = Utilizador.devolveDadosUtilizador(idUtilizador);
+                string email = dadosUtilizador.Rows[0]["email"].ToString();
+                string mensagem = "Caro leitor deve devolver o livro que tem emprestado.";
+                string assunto = "Livro emprestado";
+                string password = ConfigurationManager.AppSettings["pwdEmail"].ToString();
 
+                Helper.enviarMail("codemechaniccs@gmail.com", password, email, assunto, mensagem);
             }
         }
 
@@ -117,7 +122,7 @@ namespace M17AB_TrabalhoModelo_2018_2019
                     throw new Exception("A data de aquisição tem de ser inferior ou igual à data de hoje.");
                 //preço
                 Decimal preco = Decimal.Parse(tbPreco.Text);
-                if (preco < 0 || preco>Decimal.Parse("99,99"))
+                if (preco < 0 || preco > Decimal.Parse("99,99"))
                     throw new Exception("O preço tem de ser superior ou igual a zero e inferior a 100.");
                 //autor
                 String autor = tbAutor.Text;
@@ -130,8 +135,8 @@ namespace M17AB_TrabalhoModelo_2018_2019
                 //capa
                 if (fuCapa.HasFile == false)
                     throw new Exception("Tem de escolher uma capa para o livro.");
-                if(fuCapa.PostedFile.ContentLength==0 ||
-                    fuCapa.PostedFile.ContentLength>5000000)
+                if (fuCapa.PostedFile.ContentLength == 0 ||
+                    fuCapa.PostedFile.ContentLength > 5000000)
                     throw new Exception("O ficheiro deve ter entre 1 e 5MB.");
                 if (fuCapa.PostedFile.ContentType != "image/jpeg" &&
                     fuCapa.PostedFile.ContentType != "image/png" &&
@@ -152,7 +157,7 @@ namespace M17AB_TrabalhoModelo_2018_2019
                 tbData.Text = "";
                 tbNome.Text = "";
                 tbPreco.Text = "";
-                
+
             }
             catch (Exception erro)
             {
@@ -265,7 +270,7 @@ namespace M17AB_TrabalhoModelo_2018_2019
             //para evitar cache das imagens
             int aleatorio = new Random().Next(999999);
 
-            ifCapa.DataImageUrlFormatString = "~/Images/{0}.jpg?"+aleatorio;
+            ifCapa.DataImageUrlFormatString = "~/Images/{0}.jpg?" + aleatorio;
             ifCapa.DataImageUrlField = "nlivro";
             ifCapa.ControlStyle.Width = 100;
             gvLivros.Columns.Add(ifCapa);
@@ -318,7 +323,7 @@ namespace M17AB_TrabalhoModelo_2018_2019
                 if (perfil < 0 || perfil > 1)
                     throw new Exception("Perfil inválido");
                 //adicionar à bd
-                Utilizador.registar(email, nome, morada, nif, password,perfil);
+                Utilizador.registar(email, nome, morada, nif, password, perfil);
 
                 //mensagem ao utilizador
                 lbErro.Text = "Utilizador adicionado com sucesso.";
@@ -334,7 +339,7 @@ namespace M17AB_TrabalhoModelo_2018_2019
 
                 //atualiza grelha
                 atualizaGrelhaUtilizadores();
-                
+
             }
             catch (Exception erro)
             {
@@ -474,7 +479,14 @@ namespace M17AB_TrabalhoModelo_2018_2019
         private void atualizaDDLeitores()
         {
             ddUtilizador.Items.Clear();
-            DataTable dados=Utilizador.listaTodosUtilizadores
+            DataTable dados = Utilizador.listaTodosUtilizadores();
+            foreach (DataRow leitor in dados.Rows)
+            {
+                ddUtilizador.Items.Add(new ListItem(
+                    leitor["nome"].ToString(),
+                    leitor["id"].ToString()
+                    ));
+            }
         }
         protected void btEmprestimos_Click(object sender, EventArgs e)
         {
@@ -490,7 +502,8 @@ namespace M17AB_TrabalhoModelo_2018_2019
             Response.CacheControl = "no-cache";
 
             atualizaGrelhaEmprestimos();
-            //TODO: atualizar dropdowns
+            atualizaDDLeitores();
+            atualizaDDLivros();
         }
 
         private void atualizaGrelhaEmprestimos()
@@ -537,7 +550,23 @@ namespace M17AB_TrabalhoModelo_2018_2019
 
         protected void btEAdicionar_Click(object sender, EventArgs e)
         {
-
+            try
+            {
+                int idLeitor = int.Parse(ddUtilizador.SelectedValue);
+                int idLivro = int.Parse(ddLivro.SelectedValue);
+                DateTime dataDevolve = DataDevolve.SelectedDate;
+                Emprestimo.adicionarEmprestimo(idLivro, idLeitor, dataDevolve);
+                //atualizar grelha
+                atualizaGrelhaEmprestimos();
+                //atualizar DD
+                atualizaDDLivros();
+                atualizaDDLeitores();
+            }
+            catch (Exception erro)
+            {
+                lbErro.Text = "Ocorreu o seguinte erro: " + erro.Message;
+                lbErro.CssClass = "bg-danger";
+            }
         }
         #endregion
         #region consultas

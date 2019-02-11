@@ -64,6 +64,9 @@ namespace M17AB_TrabalhoModelo_2018_2019
 
             try
             {
+                //testar se o livro ainda está disponível
+                if (dados.Rows[0]["estado"].ToString() != "1")
+                    throw new Exception("Livro não está disponível");
                 //alterar estado do livro
                 sql = "UPDATE Livros SET estado=@estado WHERE nlivro=@nlivro";
                 List<SqlParameter> parametrosUpdate = new List<SqlParameter>()
@@ -95,7 +98,12 @@ namespace M17AB_TrabalhoModelo_2018_2019
         }
         public static DataTable listaTodosEmprestimosComNomes(int nleitor)
         {
-            string sql = @"SELECT nemprestimo,livros.nome as nomeLivro,utilizadores.nome as nomeLeitor,data_emprestimo,data_devolve,emprestimos.estado
+            string sql = @"SELECT nemprestimo,livros.nome as nomeLivro,utilizadores.nome as nomeLeitor,data_emprestimo,data_devolve,
+                        case
+                            when emprestimos.estado=0 then 'Concluído'
+                            when emprestimos.estado=1 then 'Em curso'
+                            when emprestimos.estado=2 then 'Reservado'
+                        end as estado
                         FROM Emprestimos inner join livros on emprestimos.nlivro=livros.nlivro
                         inner join utilizadores on emprestimos.idutilizador=utilizadores.id Where idutilizador=@idutilizador";
             List<SqlParameter> parametros = new List<SqlParameter>()

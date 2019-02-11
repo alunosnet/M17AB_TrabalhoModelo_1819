@@ -81,8 +81,10 @@
     <Content Include="css\bootstrap.css" />
     <Content Include="css\bootstrap.min.css" />
     <Content Include="css\css.css" />
+    <Content Include="detalheslivro.aspx" />
     <Content Include="editarlivro.aspx" />
     <Content Include="editarutilizador.aspx" />
+    <Content Include="historico.aspx" />
     <Content Include="index.aspx" />
     <Content Include="js\bootstrap.bundle.js" />
     <Content Include="js\bootstrap.bundle.min.js" />
@@ -93,6 +95,7 @@
     <Content Include="js\popper.min.js" />
     <Content Include="logbook.txt" />
     <Content Include="logout.aspx" />
+    <Content Include="recuperarpassword.aspx" />
     <Content Include="registo.aspx" />
     <Content Include="removerlivro.aspx" />
     <Content Include="removerutilizador.aspx" />
@@ -121,6 +124,13 @@
     <Compile Include="bloquearutilizador.aspx.designer.cs">
       <DependentUpon>bloquearutilizador.aspx</DependentUpon>
     </Compile>
+    <Compile Include="detalheslivro.aspx.cs">
+      <DependentUpon>detalheslivro.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="detalheslivro.aspx.designer.cs">
+      <DependentUpon>detalheslivro.aspx</DependentUpon>
+    </Compile>
     <Compile Include="editarlivro.aspx.cs">
       <DependentUpon>editarlivro.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -136,6 +146,14 @@
       <DependentUpon>editarutilizador.aspx</DependentUpon>
     </Compile>
     <Compile Include="Emprestimo.cs" />
+    <Compile Include="Helper.cs" />
+    <Compile Include="historico.aspx.cs">
+      <DependentUpon>historico.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="historico.aspx.designer.cs">
+      <DependentUpon>historico.aspx</DependentUpon>
+    </Compile>
     <Compile Include="index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -161,6 +179,13 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReCaptcha.cs" />
+    <Compile Include="recuperarpassword.aspx.cs">
+      <DependentUpon>recuperarpassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="recuperarpassword.aspx.designer.cs">
+      <DependentUpon>recuperarpassword.aspx</DependentUpon>
+    </Compile>
     <Compile Include="registo.aspx.cs">
       <DependentUpon>registo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

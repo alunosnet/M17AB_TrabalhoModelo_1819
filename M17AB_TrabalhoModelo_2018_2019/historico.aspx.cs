@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace M17AB_TrabalhoModelo_2018_2019
 {
-    public partial class bloquearutilizador : System.Web.UI.Page
+    public partial class historico : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -18,13 +18,13 @@ namespace M17AB_TrabalhoModelo_2018_2019
             try
             {
                 int id = int.Parse(Request["id"].ToString());
-                Utilizador.ativarDesativarUtilizador(id);
+                gvHistorico.DataSource = Emprestimo.listaTodosEmprestimosComNomes(id);
+                gvHistorico.DataBind();
             }
             catch
             {
-
+                Response.Redirect("areaadmin.aspx");
             }
-            Response.Redirect("areaadmin.aspx");
         }
     }
 }

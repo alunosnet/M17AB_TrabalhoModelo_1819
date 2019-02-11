@@ -12,7 +12,9 @@ namespace M17AB_TrabalhoModelo_2018_2019
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //TODO: verificar se é admin
+            if (Session["perfil"] == null ||
+                Session["perfil"].ToString() != "0")
+                Response.Redirect("index.aspx");
 
             try
             {

@@ -38,8 +38,8 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ordenação</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            <a class="dropdown-item" href="Tabela_N_Norm.aspx">Por Preço</a>
-                            <a class="dropdown-item" href="Tabela_Norm.aspx">Por Autor</a>
+                            <a class="dropdown-item" href="index.aspx?ordena=1">Por Preço</a>
+                            <a class="dropdown-item" href="index.aspx?ordena=2">Por Autor</a>
                         </div>
                     </li>
                     <%} %>
