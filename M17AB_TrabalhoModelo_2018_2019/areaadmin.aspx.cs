@@ -572,11 +572,68 @@ namespace M17AB_TrabalhoModelo_2018_2019
         #region consultas
         protected void btConsultas_Click(object sender, EventArgs e)
         {
+            EscondeDivs();
 
+            //mostrar div emprestimos
+            divConsultas.Visible = true;
+
+            //css botões
+            btConsultas.CssClass = "btn btn-info active";
+
+            //cache
+            Response.CacheControl = "no-cache";
+
+            atualizaGrelhaConsultas();
         }
         protected void ddConsula_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            atualizaGrelhaConsultas();
+        }
+        private void atualizaGrelhaConsultas()
+        {
+            gvConsultas.Columns.Clear();
+            int iconsulta = int.Parse(ddConsula.SelectedValue);
+            DataTable dados;
+            string sql = "";
+            switch (iconsulta)
+            {
+                case 0:
+                    sql = @"select nome,count(nlivro) as [nr emprestimos] from utilizadores inner join emprestimos
+                                on utilizadores.id=emprestimos.idutilizador
+                                group by utilizadores.id,nome
+                                order by [nr emprestimos] DESC";
+                    break;
+                case 1:
+                    sql = @"select nome,count(*) as [nr emprestimos] from livros inner join emprestimos
+                                on livros.nlivro=emprestimos.nlivro
+                                group by livros.nlivro,nome
+                                order by [nr emprestimos] DESC";
+                    break;
+                case 2:
+                    sql = @"select emprestimos.*,utilizadores.nome as Leitor,utilizadores.email,livros.nome as Livro
+                                from emprestimos
+                                inner join utilizadores on utilizadores.id=emprestimos.idutilizador
+                                inner join livros on livros.nlivro=emprestimos.nlivro
+                                where emprestimos.estado=1 and data_devolve<getdate()
+                                order by emprestimos.data_devolve 
+                                ";
+                    break;
+                case 3:
+                    sql = @"select nome,data_aquisicao from livros
+                                where DATEDIFF(day, data_aquisicao, getdate())< 7";
+                    break;
+                case 4:
+                    sql = @"select avg(datediff(day,data_emprestimo,data_devolve)) from emprestimos";
+                    break;
+                case 5:
+                    sql = @"select nome from utilizadores inner join emprestimos 
+                            on emprestimos.idutilizador=utilizadores.id
+                            where emprestimos.nlivro=(select top 1 nlivro from livros order by preco desc)";
+                    break;
+            }
+            dados = BaseDados.Instance.devolveSQL(sql);
+            gvConsultas.DataSource = dados;
+            gvConsultas.DataBind();
         }
         #endregion
 
