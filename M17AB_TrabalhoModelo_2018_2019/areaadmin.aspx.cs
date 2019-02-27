@@ -44,7 +44,22 @@ namespace M17AB_TrabalhoModelo_2018_2019
 
             //botões de comando
             gvEmprestimos.RowCommand += GvEmprestimos_RowCommand;
+            gvEmprestimos.RowDataBound += GvEmprestimos_RowDataBound;
         }
+
+        private void GvEmprestimos_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                DateTime datadevolve = DateTime.Parse(e.Row.Cells[6].Text);
+                int estado = int.Parse(e.Row.Cells[7].Text);
+                if (datadevolve < DateTime.Now && estado!=0)
+                    e.Row.Cells[1].Controls[0].Visible = true;
+                else
+                    e.Row.Cells[1].Controls[0].Visible = false;
+            }
+        }
+
 
         private void GvEmprestimos_RowCommand(object sender, GridViewCommandEventArgs e)
         {
